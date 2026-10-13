@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#123d73" />
+  <title>GeoAssist GIS Toolkit</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">G</div>
+    <div>
+      <h1>GeoAssist GIS Toolkit</h1>
+      <p>Practical tools for everyday GIS operations</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="intro panel">
+      <div>
+        <span class="eyebrow">FIELD • DESK • ANALYSIS</span>
+        <h2>Work smarter with spatial data</h2>
+        <p>Calculate distances and polygon areas, convert coordinate formats, collect points, and export your records.</p>
+      </div>
+      <button id="locateBtn" class="button primary">Use my location</button>
+      <p id="locationStatus" class="status" aria-live="polite"></p>
+    </section>
+
+    <nav class="tabs" aria-label="GIS tools">
+      <button class="tab active" data-tab="coordinates">Coordinates</button>
+      <button class="tab" data-tab="distance">Distance</button>
+      <button class="tab" data-tab="area">Area</button>
+      <button class="tab" data-tab="points">Point manager</button>
+    </nav>
+
+    <section id="coordinates" class="tool panel">
+      <h2>Coordinate converter</h2>
+      <p class="muted">Convert decimal degrees to degrees–minutes–seconds (DMS), or DMS back to decimal degrees.</p>
+      <div class="grid two">
+        <label>Latitude (decimal degrees)
+          <input id="latInput" type="number" step="any" min="-90" max="90" placeholder="e.g. 10.5105" />
+        </label>
+        <label>Longitude (decimal degrees)
+          <input id="lonInput" type="number" step="any" min="-180" max="180" placeholder="e.g. 7.4165" />
+        </label>
+      </div>
+      <div class="actions">
+        <button id="toDmsBtn" class="button primary">Convert to DMS</button>
+        <button id="saveCoordBtn" class="button secondary">Save as point</button>
+      </div>
+      <div id="dmsResult" class="result" aria-live="polite">Your converted coordinates will appear here.</div>
+      <hr />
+      <h3>Convert DMS to decimal degrees</h3>
+      <div class="grid three">
+        <label>Latitude DMS
+          <input id="latDms" placeholder="10 30 37.8 N" />
+        </label>
+        <label>Longitude DMS
+          <input id="lonDms" placeholder="7 24 59.4 E" />
+        </label>
+        <div class="align-end"><button id="fromDmsBtn" class="button secondary full">Convert to decimal</button></div>
+      </div>
+      <div id="decimalResult" class="result" aria-live="polite">Decimal results will appear here.</div>
+    </section>
+
+    <section id="distance" class="tool panel hidden">
+      <h2>Distance calculator</h2>
+      <p class="muted">Calculate the great-circle distance between two latitude/longitude points using the Haversine formula.</p>
+      <div class="grid two">
+        <fieldset>
+          <legend>Point A</legend>
+          <label>Latitude <input id="aLat" type="number" step="any" placeholder="e.g. 10.5105" /></label>
+          <label>Longitude <input id="aLon" type="number" step="any" placeholder="e.g. 7.4165" /></label>
+        </fieldset>
+        <fieldset>
+          <legend>Point B</legend>
+          <label>Latitude <input id="bLat" type="number" step="any" placeholder="e.g. 10.5200" /></label>
+          <label>Longitude <input id="bLon" type="number" step="any" placeholder="e.g. 7.4300" /></label>
+        </fieldset>
+      </div>
+      <button id="distanceBtn" class="button primary">Calculate distance</button>
+      <div id="distanceResult" class="result" aria-live="polite">Distance will appear here.</div>
+    </section>
+
+    <section id="area" class="tool panel hidden">
+      <h2>Polygon area calculator</h2>
+      <p class="muted">Enter one polygon vertex per line as <code>latitude, longitude</code>. Use at least three vertices in boundary order. The result is an approximate area on a spherical Earth.</p>
+      <label>Polygon vertices
+        <textarea id="vertices" rows="7" placeholder="10.5105, 7.4165&#10;10.5200, 7.4300&#10;10.5000, 7.4400"></textarea>
+      </label>
+      <button id="areaBtn" class="button primary">Calculate polygon area</button>
+      <div id="areaResult" class="result" aria-live="polite">Area will appear here.</div>
+    </section>
+
+    <section id="points" class="tool panel hidden">
+      <div class="section-heading">
+        <div>
+          <h2>Point manager</h2>
+          <p class="muted">Keep a simple local register of survey or field points. Records remain in this page until you clear them or close/reload it.</p>
+        </div>
+        <button id="exportBtn" class="button secondary">Export CSV</button>
+      </div>
+      <div class="grid three">
+        <label>Point name <input id="pointName" placeholder="e.g. Sample point 01" /></label>
+        <label>Latitude <input id="pointLat" type="number" step="any" placeholder="Latitude" /></label>
+        <label>Longitude <input id="pointLon" type="number" step="any" placeholder="Longitude" /></label>
+      </div>
+      <label>Notes (optional) <input id="pointNotes" placeholder="Land use, feature, observation..." /></label>
+      <div class="actions">
+        <button id="addPointBtn" class="button primary">Add point</button>
+        <button id="clearPointsBtn" class="button danger">Clear all points</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Latitude</th><th>Longitude</th><th>Notes</th><th></th></tr></thead>
+          <tbody id="pointsBody"><tr><td colspan="5" class="empty">No points saved yet.</td></tr></tbody>
+        </table>
+      </div>
+      <p id="pointStatus" class="status" aria-live="polite"></p>
+    </section>
+
+    <section class="notice">
+      <strong>Important:</strong> This is a lightweight GIS helper, not a replacement for QGIS, ArcGIS, or a surveyed GPS/GNSS workflow. Distance and area calculations use spherical approximations. Coordinates must be WGS 84 latitude/longitude in decimal degrees; projected systems such as UTM are not converted in this version.
+    </section>
+  </main>
+  <footer>GeoAssist GIS Toolkit · Runs locally in your browser</footer>
+  <script src="script.js"></script>
+</body>
+</html>
